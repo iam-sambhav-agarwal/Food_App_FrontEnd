@@ -6,16 +6,16 @@ import CarouseItem from "./CarouselItem";
 import { topMeel } from "./TopMeel";
 
 const MultiItemCarousel = () => {
-    const settings = {
-        dots: true,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 5,
-        slidesToScroll: 1,
-        autoplay: true,
-        autoplaySpeed: 2000,
-        arrows: false
-      };
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 5,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 1000,
+    arrows: false,
+  };
   return (
     <div>
       <Slider {...settings}>
