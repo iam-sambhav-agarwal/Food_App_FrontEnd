@@ -10,8 +10,10 @@ import "./Navbar.css";
 const Navbar = () => {
   return (
     <div className="px-5 z-50 py-[.8rem] bg-[#e91e63] lg:px-20 flex justify-between">
-      <div className="lgmr-10 cursor-pointer flex item-center space-x-4">
-        <li className="logo font-semibold text-gray-300 text-2xl">Agarwal Foods</li>
+      <div className="lg:mr-10 cursor-pointer flex items-center space-x-4">
+        <li className="logo font-semibold text-gray-300 text-2xl">
+          Agarwal Foods
+        </li>
       </div>
 
       <div className="flex items-center space-x-2 lg:space-x-10">
