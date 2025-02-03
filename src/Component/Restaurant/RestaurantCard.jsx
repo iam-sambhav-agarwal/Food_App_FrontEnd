@@ -19,7 +19,7 @@ const RestaurantCard = () => {
           className="absolute top-2 left-2"
           color={true ? "success" : "error"}
           label={true ? "Open" : "Close"}
-        ></Chip>
+        />
       </div>
       <div className="p-4 textPart lg:flex w-full jusitfy-between">
         <div className="space-y-1">

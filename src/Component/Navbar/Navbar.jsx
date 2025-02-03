@@ -6,10 +6,14 @@ import { pink } from "@mui/material/colors";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Badge from "@mui/material/Badge";
 import "./Navbar.css";
+import { Person } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+const navigate =useNavigate();
+
   return (
-    <div className="px-5 z-50 py-[.8rem] bg-[#e91e63] lg:px-20 flex justify-between">
+    <div className="px-5 sticky top-0 z-50 py-[.8rem] bg-[#e91e63] lg:px-20 flex justify-between">
       <div className="lg:mr-10 cursor-pointer flex items-center space-x-4">
         <li className="logo font-semibold text-gray-300 text-2xl">
           Agarwal Foods
@@ -23,7 +27,14 @@ const Navbar = () => {
           </IconButton>
         </div>
         <div className="">
-          <Avatar sx={{ bgcolor: "white", color: pink.A400 }}>C</Avatar>
+          {false ? (
+            <Avatar sx={{ bgcolor: "white", color: pink.A400 }}>C</Avatar>
+          ) : (
+            <IconButton onClick={()=>navigate("/account/login")} >
+              
+              <Person />
+            </IconButton>
+          )}
         </div>
         <div className="">
           <IconButton>
