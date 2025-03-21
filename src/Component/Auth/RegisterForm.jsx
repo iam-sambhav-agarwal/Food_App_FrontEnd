@@ -10,6 +10,8 @@ import {
 } from "@mui/material";
 import { Formik, Form, Field } from "formik";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { registerUser } from "../State/Authentication/Action";
 
 const initialValues = {
   fullName: "",
@@ -20,8 +22,9 @@ const initialValues = {
 
 const RegisterForm = () => {
   const navigate = useNavigate();
-  const handleSubmit = (value) => {
-    console.log("value", value);
+  const dispatch = useDispatch();
+  const handleSubmit = (values) => {
+    dispatch(registerUser({ userData: values, navigate: navigate }));
   };
   return (
     <div>
@@ -84,7 +87,7 @@ const RegisterForm = () => {
 
       <Typography variant="body2" align="center" sx={{ mt: 3 }}>
         if have an account already?
-        <Button size="small" onCflick={() => navigate("/account/login")}>
+        <Button size="small" onClick={() => navigate("/account/login")}>
           login
         </Button>
       </Typography>

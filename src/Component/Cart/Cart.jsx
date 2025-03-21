@@ -11,13 +11,11 @@ import {
   Grid2,
   TextField,
 } from "@mui/material";
-import { Formik ,Field, Form } from "formik";
+import { Formik, Field, Form } from "formik";
+import { useSelector, useDispatch } from "react-redux";
+import { createOrder } from "../State/Order/Action";
 
-// import * as Yup from "yup";
-
-const items = [1, 1];
-
- export const style = {
+export const style = {
   position: "absolute",
   top: "50%",
   left: "50%",
@@ -35,30 +33,41 @@ const initialValues = {
   pincode: "",
   city: "",
 };
-// const validationSchema = Yup.object().shape({
-//   streetAddress: Yup.string().required("Street Address is required"),
-//   state: Yup.string().required("State is required"),
-//   pincode: Yup.number()
-//     .typeError("Pincode must be a number")
-//     .required("Pincode is required"),
-//   city: Yup.string().required("City is required"),
-// });
 
 const Cart = () => {
   const createOrderUsingSelectedAddress = () => {};
   const handleOpenAddressModal = () => setOpen(true);
   const [open, setOpen] = React.useState(false);
   const handleClose = () => setOpen(false);
+  const { cart, auth } = useSelector((store) => store);
+  const dispatch = useDispatch();
 
-  const handleSubmit = (value) => {
-    console.log("value", value);
+  const handleSubmit = (values) => {
+    const data = {
+      jwt: localStorage.getItem("jwt"),
+      order: {
+        restaurantId: cart.cartItems[0].food?.restaurant.id,
+        totalItem: cart.cartItems.reduce((sum, item) => sum + item.quantity, 0),
+        deliveryAddress: {
+          fullName: auth.user?.fullName,
+          streetAddress: values.streetAddress,
+          city: values.city,
+          state: values.state,
+          postalCode: values.pincode,
+          country: "India",
+        },
+      },
+    };
+    console.log("data.order.totalItem-->", data.order.totalItem);
+    dispatch(createOrder(data));
+    console.log("value", values);
   };
   return (
     <>
       <main className="lg:flex justify-between">
         <section className="lg:w-[30%] space-y-6 lg:min-h-screen pt-10">
-          {items.map((item) => (
-            <CartItem />
+          {cart.cartItems.map((item) => (
+            <CartItem item={item} />
           ))}
           <Divider />
           <div className="billDetails px-5 text-sm">
@@ -66,7 +75,7 @@ const Cart = () => {
             <div className="space-y-3">
               <div className="flex justify-between text-gray-400">
                 <p>Item Total</p>
-                <p>₹199</p>
+                <p>₹{cart.cart?.total}</p>
               </div>
               <div className="flex justify-between text-gray-400">
                 <p>Delivery Fee</p>
@@ -80,7 +89,7 @@ const Cart = () => {
             </div>
             <div className="flex justify-between text-gray-400">
               <p>Total pay</p>
-              <p>₹269</p>
+              <p>₹{cart.cart?.total + 20 + 50}</p>
             </div>
           </div>
         </section>
@@ -94,7 +103,8 @@ const Cart = () => {
             <div className="flex gap-5 flex-wrap justify-center">
               {[1, 1, 1].map((item) => (
                 <AddressCard
-                  handleSelectAddress={createOrderUsingSelectedAddress}
+                  // handleSelectAddress={createOrderUsingSelectedAddress}
+                  handleSelectAddress={handleSubmit}
                   item={item}
                   showButton={true}
                 />

@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useState } from "react";
 import {
   AccordionSummary,
   AccordionDetails,
@@ -9,23 +9,39 @@ import {
   Button,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { CategoriesIngredients } from "../../util/CategoriesIngredients";
+import { addItemToCart } from "../State/Cart/Action";
+import { useDispatch } from "react-redux";
+const MenuCard = ({ item }) => {
+  const [selectedIngredients, setSelectedIngredients] = useState([]);
+  const dispatch = useDispatch();
 
-const ingredients = [
-  {
-    category: "Nuts & seeds",
-    ingredient: ["cashews"],
-  },
-  {
-    category: "Protein",
-    ingredient: ["Ground Beef", "Bacon Strips"],
-  },
-];
+  const handleAddItemToCart = (e) => {
+    e.preventDefault();
 
-const MenuCard = () => {
+    const reqData = {
+      token: localStorage.getItem("jwt"),
+      cartItem: {
+        foodId: item.id,
+        quantity: 1,
+        ingredients: selectedIngredients,
+      },
+    };
 
-    const handleCheckBoxChange=(value)=>{
-        console.log("value",value);
+    dispatch(addItemToCart(reqData));
+    console.log("reqData", reqData);
+  };
+  const handleCheckBoxChange = (itemName) => {
+    console.log("itemName", itemName);
+    if (selectedIngredients.includes(itemName)) {
+      setSelectedIngredients(
+        selectedIngredients.filter((item) => item !== itemName)
+      );
+    } else {
+      setSelectedIngredients([...selectedIngredients, itemName]);
     }
+  };
+
   return (
     <Accordion>
       <AccordionSummary
@@ -37,36 +53,43 @@ const MenuCard = () => {
           <div className="lg:flex items-center lg:gap-5">
             <img
               className="w-[7rem] h-[7rem] object-cover"
-              src="https://media.istockphoto.com/id/998309062/photo/burger-with-beef-and-cheese.jpg?b=1&s=612x612&w=0&k=20&c=mHsQePbxqrXOk5V7ImuJP0HiFr5ed_1FbFa4eDCwwkE= "
+              src={item.images[0]}
               alt=""
             />
             <div className="spce-y-1 lg:space-y-5 lg:max-w-2xl">
-              <p className="font-semibold text-xl">Burger</p>
-              <p>₹ 499</p>
-              <p className="text-gray-400">Nice Burger</p>
+              <p className="font-semibold text-xl">{item.name}</p>
+              <p>₹{item.price}</p>
+              <p className="text-gray-400">{item.description}</p>
             </div>
           </div>
         </div>
       </AccordionSummary>
       <AccordionDetails>
-        <form>
+        <form onSubmit={handleAddItemToCart}>
           <div className="flex gap-5 flex-wrap">
-            {ingredients.map((item) => (
-              <div>
-                <p>{item.category}</p>
+            {Object.keys(CategoriesIngredients(item.ingredientsItems)).map(
+              (category) => (
+                <div>
+                  <p>{category}</p>
 
-                <FormGroup>
-                  {item.ingredient.map((item) => (
-                    <FormControlLabel
-                      control={
-                        <Checkbox onClick={() => handleCheckBoxChange(item)} />
-                      }
-                      label={item}
-                    />
-                  ))}
-                </FormGroup>
-              </div>
-            ))}
+                  <FormGroup>
+                    {CategoriesIngredients(item.ingredientsItems)[category].map(
+                      (item) => (
+                        <FormControlLabel
+                          key={item.key}
+                          control={
+                            <Checkbox
+                              onClick={() => handleCheckBoxChange(item.name)}
+                            />
+                          }
+                          label={item.name}
+                        />
+                      )
+                    )}
+                  </FormGroup>
+                </div>
+              )
+            )}
           </div>
           <div className="pt-5">
             <Button variant="contained" type="submit" disabled={false}>
